@@ -54,18 +54,32 @@ class UserController extends BaseController
         return view('\Solaitra\Users\Views\user_create', $this->data);
     }
 
-    public function store()
-    {
-        $data = $this->request->getPost();
-        $this->userModel->save($data);
-
-        return redirect()->to('/users');
-    }
 
     public function edit($id)
     {
+        // Get the User Provider (UserModel by default)
+        $users = auth()->getProvider();
+        $user = $users->find($id);
         $this->data['page_title'] = lang('Users.edit_user');
-        $this->data['user'] = $this->userModel->find($id);
+        if ($this->request->is('post') && $this->validate([
+            'id'    => 'max_length[19]|is_natural_no_zero',
+            'username' => 'required|min_length[4]|max_length[50]|is_unique[users.username,id,{id}]|regex_match[/\A[a-zA-Z0-9\.]+\z/]',
+            'email' => 'required|max_length[254]|valid_email|is_unique[auth_identities.secret,user_id,{id}]',
+            'password' => 'permit_empty|max_length[254]|min_length[10]'
+        ])) {
+
+            $user->fill([
+                'username' => $this->request->getPost('username'),
+                'email'    => $this->request->getPost('email'),
+            ]);
+            if($this->request->getPost('password')) {
+                $user->fill(['password' => $this->request->getPost('password')]);
+            }
+            $users->save($user);
+            return redirect()->to('users')->with('message', lang('Users.user_updated'));
+        }
+        $this->data['validation'] = $this->validator;
+        $this->data['user'] = $user;
         return view('\Solaitra\Users\Views\user_edit', $this->data);
     }
 

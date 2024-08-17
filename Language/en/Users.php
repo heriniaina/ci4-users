@@ -11,4 +11,9 @@ return [
     'save' => 'Save',
     'create_user' => 'Create User',
     'user_created' => 'User created successfully',
+    'action' => 'Action',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'user_updated' => 'User updated successfully',
+    'sign_out' => 'Sign out',
 ];

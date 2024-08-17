@@ -1,9 +1,11 @@
 <?php echo $this->extend('admin'); ?>
 <?php $this->section('content'); ?>
 
-<form action="/users/update/<?= $user->id ?>" method="post">
+<form method="post">
 <?php echo csrf_field(); ?>
+<input type="hidden" name="id" value="<?php echo $user->id; ?>">
 <div class="mb-3">
+    
         <label for="username" class="form-label"><?php echo lang('Users.username') ?></label>
         <input
             type="text"
