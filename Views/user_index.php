@@ -1,7 +1,7 @@
 <?php echo $this->extend('admin');?>
 <?php $this->section('content'); ?>
 
-<a href="/users/create"><?php echo lang('Users.create_user') ?></a>
+<a href="<?php echo site_url('admin/users/create') ?>"><?php echo lang('Users.create_user') ?></a>
 
 <table class="table">
     <thead>
@@ -19,8 +19,8 @@
             <td><?= $user->username ?></td>
             <td><?= $user->email ?></td>
             <td>
-                <a href="/users/edit/<?= $user->id ?>"><?php echo lang('Users.edit') ?></a> | 
-                <a href="/users/delete/<?= $user->id ?>"><?php echo lang('Users.delete') ?></a>
+                <?php echo anchor('admin/users/edit/' . $user->id, lang('Users.edit')) ?> | 
+                <?php echo anchor('admin/users/delete/' . $user->id, lang('Users.delete')) ?>
             </td>
         </tr>
         <?php endforeach; ?>

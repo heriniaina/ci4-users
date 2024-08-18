@@ -46,7 +46,7 @@ class UserController extends BaseController
             // Add to default group
             $users->addToDefaultGroup($user);
 
-            return redirect()->to('users')->with('message', lang('Users.user_created'));
+            return redirect()->to('admin/users')->with('message', lang('Users.user_created'));
         }
         $this->data['validation'] = $this->validator;
 
@@ -72,28 +72,35 @@ class UserController extends BaseController
                 'username' => $this->request->getPost('username'),
                 'email'    => $this->request->getPost('email'),
             ]);
-            if($this->request->getPost('password')) {
+            if ($this->request->getPost('password')) {
                 $user->fill(['password' => $this->request->getPost('password')]);
             }
             $users->save($user);
-            return redirect()->to('users')->with('message', lang('Users.user_updated'));
+            return redirect()->to('admin/users')->with('message', lang('Users.user_updated'));
         }
         $this->data['validation'] = $this->validator;
         $this->data['user'] = $user;
         return view('\Solaitra\Users\Views\user_edit', $this->data);
     }
 
-    public function update($id)
-    {
-        $data = $this->request->getPost();
-        $this->userModel->update($id, $data);
-
-        return redirect()->to('/users');
-    }
 
     public function delete($id)
     {
-        $this->userModel->delete($id);
-        return redirect()->to('/users');
+        $user = auth()->getUser();
+        if($user->id == $id ) {
+            return redirect()->to('admin/users')->with('error', lang('Users.user_self_delete_not_allowed'));
+        }
+        if ($this->request->is('post')) {
+            if($this->request->getPost('confirm') == 1) {
+                $this->userModel->delete($id, true);
+                return redirect()->to('admin/users')->with('message', lang('Users.user_deleted'));
+            }
+            return redirect()->to('admin/users')->with('error', lang('Users.user_not_deleted'));
+            
+            
+        }
+        $this->data['page_title'] = lang('Users.delete_user');
+        $this->data['page_description'] = lang('Users.user_delete_confirm');
+        return view('\Solaitra\Users\Views\user_delete', $this->data);
     }
 }

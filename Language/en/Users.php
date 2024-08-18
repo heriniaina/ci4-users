@@ -16,4 +16,11 @@ return [
     'delete' => 'Delete',
     'user_updated' => 'User updated successfully',
     'sign_out' => 'Sign out',
+    'manage_users' => 'Manage users',
+    'users' => 'Users',
+    'user_deleted' => 'User deleted successfully',
+    'user_delete_confirm' => 'Do you really want to delete that user?',
+    'user_self_delete_not_allowed' => 'Sorry, you cannot delete yourself.',
+    'user_not_deleted' => 'User was not deleted',
+    'delete_user' => 'Delete user',
 ];
